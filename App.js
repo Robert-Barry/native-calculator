@@ -1,4 +1,4 @@
-import { StatusBar } from 'expo-status-bar';
+import { useState } from 'react';
 import { 
   StyleSheet,
   Text, 
@@ -6,45 +6,59 @@ import {
   TextInput,
   Pressable
 } from 'react-native';
+import { 
+  numberForEquation,
+  operandForEquation,
+  parseEquation,
+  isOperand 
+} from './scripts/calculator';
 
 const App = () => {
+  const [output, setOutput] = useState('0');
+  const [equation, setEquation] = useState([]);
+
+  const handleButtonPressed = (value) => {
+    setOutput(value);
+  }
+
   return (
     <View style={styles.container}>
       <Text style={styles.heading}>React Native Calculator</Text>
       <TextInput
         style={styles.output}
         editable={false}
+        value={output}
       />
       <View>
         <View style={styles.row}>
-          <Button  data='<' />
-          <Button  data='AC' />
-          <Button  data='%' />
-          <Button  data='/' />
+          <Button  data='<' isDisabled={true} />
+          <Button  data='AC' onPress={() => handleButtonPressed('AC')} />
+          <Button  data='%' isDisabled={true} />
+          <Button  data='/' onPress={() => handleButtonPressed('/')} />
         </View>
         <View style={styles.row}>
-          <Button  data='7' />
-          <Button  data='8' />
-          <Button  data='9' />
-          <Button  data='x' />
+          <Button  data='7' onPress={() => handleButtonPressed('7')} />
+          <Button  data='8' onPress={() => handleButtonPressed('8')} />
+          <Button  data='9' onPress={() => handleButtonPressed('9')} />
+          <Button  data='x' onPress={() => handleButtonPressed('*')} />
         </View>
         <View style={styles.row}>
-          <Button  data='4' />
-          <Button  data='5' />
-          <Button  data='6' />
-          <Button  data='-' />
+          <Button  data='4' onPress={() => handleButtonPressed('4')} />
+          <Button  data='5' onPress={() => handleButtonPressed('5')} />
+          <Button  data='6' onPress={() => handleButtonPressed('6')} />
+          <Button  data='-' onPress={() => handleButtonPressed('-')} />
         </View>
         <View style={styles.row}>
-          <Button  data='1' />
-          <Button  data='2' />
-          <Button  data='3' />
-          <Button  data='+' />
+          <Button  data='1' onPress={() => handleButtonPressed('1')} />
+          <Button  data='2' onPress={() => handleButtonPressed('2')} />
+          <Button  data='3' onPress={() => handleButtonPressed('3')} />
+          <Button  data='+' onPress={() => handleButtonPressed('4')} />
         </View>
         <View style={styles.row}>
-          <Button  data='+/-' />
-          <Button  data='0' />
-          <Button  data='.' />
-          <Button  data='=' />
+          <Button  data='+/-' isDisabled={true} />
+          <Button  data='0' onPress={() => handleButtonPressed('0')} />
+          <Button  data='.' onPress={() => handleButtonPressed('.')} />
+          <Button  data='=' onPress={() => handleButtonPressed('=')} />
         </View>
       </View>
     </View>
@@ -53,7 +67,11 @@ const App = () => {
 
 const Button = (props) => {
   return (
-    <Pressable style={styles.button}>
+    <Pressable 
+      style={styles.button} 
+      disabled={props.isDisabled}
+      onPress={props.onPress}
+    >
       <Text>{props.data}</Text>
     </Pressable>
   )
