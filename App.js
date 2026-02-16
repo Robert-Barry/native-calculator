@@ -18,7 +18,36 @@ const App = () => {
   const [equation, setEquation] = useState([]);
 
   const handleButtonPressed = (value) => {
-    setOutput(value);
+    if (value === 'AC') {
+      setEquation([]);
+      setOutput('0');
+      return;
+    }
+
+    if (value === '=') {
+      // Use the current equation to calculate the result
+      const result = parseEquation(equation);
+      setOutput(String(result));
+      setEquation([String(result)]);
+      return;
+    }
+
+    // Calculate the next state in a local variable
+    let nextEquation = [...equation];
+
+    // if the value is a number
+    if (!isNaN(value) && value !== ' ') {
+      nextEquation = numberForEquation(equation, value);
+    // if the value is an operand
+    } else if (isOperand(value)) {
+      nextEquation = operandForEquation(equation, value);
+    }
+
+    // Update the state for the next render
+    setEquation(nextEquation);
+
+    // Update the output using the local variable, not the stale state
+    setOutput(nextEquation.join(' '));
   }
 
   return (
@@ -52,7 +81,7 @@ const App = () => {
           <Button  data='1' onPress={() => handleButtonPressed('1')} />
           <Button  data='2' onPress={() => handleButtonPressed('2')} />
           <Button  data='3' onPress={() => handleButtonPressed('3')} />
-          <Button  data='+' onPress={() => handleButtonPressed('4')} />
+          <Button  data='+' onPress={() => handleButtonPressed('+')} />
         </View>
         <View style={styles.row}>
           <Button  data='+/-' isDisabled={true} />
